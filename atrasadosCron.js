@@ -1,29 +1,30 @@
 const cron = require('node-cron');
-const db = require('./models');
-const { Op } = require('sequelize');
+const { updateAtrasados } = require('./controllers/expedientesController');
 
-const Expedientes = db.Expedientes;
+module.exports = (app) => {
+  const tipos = ['federales', 'provinciales', 'extrajudiciales'];
 
-// Cron que corre todos los días a la medianoche (00:00)
-cron.schedule('0 0 * * *', async () => {
-  console.log('Ejecutando tarea diaria para marcar atrasados');
+  cron.schedule('*/10 * * * * *', async () => {
+    console.log('🕛 Ejecutando cron para actualizar expedientes atrasados...');
+    const io = app.get('socketio');
 
-  try {
-    const cincoDiasAtras = new Date();
-    cincoDiasAtras.setDate(cincoDiasAtras.getDate() - 5);
-
-    const [updatedCount] = await Expedientes.update(
-      { idEstado: 3 }, // 3 = Atrasado
-      {
-        where: {
-          updatedAt: { [Op.lt]: cincoDiasAtras },
-          idEstado: { [Op.ne]: 4 } // No actualizar si ya está Finalizado
-        }
+    for (const tipo of tipos) {
+      try {
+        await updateAtrasados(
+          { params: { tipo } },
+          {
+            json: (msg) => {
+              console.log(`✔ ${tipo}: ${msg.mensaje}`);
+              io.emit('expedientes-atrasados', { tipo, mensaje: msg.mensaje });
+            },
+            status: (code) => ({
+              json: (err) => console.error(`✖ ${tipo} - Error ${code}:`, err),
+            }),
+          }
+        );
+      } catch (e) {
+        console.error(`💥 Error al actualizar ${tipo}:`, e.message);
       }
-    );
-
-    console.log(`Expedientes actualizados a Atrasado: ${updatedCount}`);
-  } catch (error) {
-    console.error('Error en cron job de atrasados:', error);
-  }
-});
+    }
+  });
+};

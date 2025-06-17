@@ -16,6 +16,7 @@ db.sequelize = sequelize;
 db.Estado = require('./Estado')(sequelize, DataTypes);
 db.TipoExpediente = require('./TipoExpediente')(sequelize, DataTypes);
 db.Expedientes = require('./Expedientes')(sequelize, DataTypes);
+db.Usuario = require('./Usuario')(sequelize, DataTypes);
 
 
 // Asociaciones (si existen)
