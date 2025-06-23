@@ -17,7 +17,6 @@ exports.getExpedientes = async (req, res) => {
       where: {
         idTipo,
         idUsuario: req.user.idUsuario,
-        eliminado: 0,
       }
     });
     res.json(expedientes);
@@ -29,7 +28,7 @@ exports.getExpedientes = async (req, res) => {
 exports.getAllExpedientes = async (req, res) => {
   try {
     // Esta función no filtra por usuario, se usa solo si el usuario tiene permisos especiales
-    const expedientes = await Expedientes.findAll({ where: { eliminado: 0 }});
+    const expedientes = await Expedientes.findAll();
     res.json(expedientes);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -54,7 +53,6 @@ exports.getExpedienteByTipoYId = async (req, res) => {
         idExpediente: id,
         idTipo,
         idUsuario,
-        eliminado: 0
       }
     });
 
@@ -87,7 +85,6 @@ exports.getExpedientesDelUsuario = async (req, res) => {
       where: {
         idUsuario,
         idTipo: tipoExpediente.idTipo,
-        eliminado: 0
       }
     });
 
@@ -133,7 +130,6 @@ exports.updateExpediente = async (req, res) => {
       where: {
         idExpediente: id,
         idUsuario: req.user.idUsuario,
-        eliminado: 0
       }
     });
 
@@ -213,7 +209,6 @@ exports.updateAtrasados = async (req, res) => {
             idTipo,
             fechaActualizacion: { [Op.lt]: sieteDiasAtras },
             idEstado: 1,
-            eliminado: 0
           }
         }
       );
@@ -238,7 +233,6 @@ exports.finalizarExpediente = async (req, res) => {
       where: {
         idExpediente: id,
         idUsuario: req.user.idUsuario,
-        eliminado: 0
       }
     });
 
