@@ -73,6 +73,8 @@ db.sequelize.authenticate()
     // Y arrancamos el servidor
     server.listen(port, () => {
       console.log(`Servidor corriendo en http://localhost:${port}`);
+      console.log(`Servidor corriendo en https://backendabogados-hsnm.onrender.com`);
+      
     });
   })
   .catch(err => {
