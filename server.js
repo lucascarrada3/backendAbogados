@@ -9,6 +9,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const app = express(); // ← MOVER ESTA LÍNEA AQUÍ
+const port = process.env.PORT || 18012
 
 const server = http.createServer(app); // ← YA puedes usar `app` aquí
 
@@ -19,7 +20,7 @@ const io = new Server(server, {
   }
 });
 
-const PORT = 3001;
+// const PORT = 3001;
 
 app.set('socketio', io);
 
@@ -70,8 +71,8 @@ db.sequelize.authenticate()
     require('./atrasadosCron')(app);
 
     // Y arrancamos el servidor
-    server.listen(PORT, () => {
-      console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    server.listen(port, () => {
+      console.log(`Servidor corriendo en http://localhost:${port}`);
     });
   })
   .catch(err => {
