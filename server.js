@@ -9,14 +9,14 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const app = express(); // ← MOVER ESTA LÍNEA AQUÍ
-const port = process.env.PORT || 18012
+const port = process.env.PORT || 3001
 
 const server = http.createServer(app); // ← YA puedes usar `app` aquí
 
 const io = new Server(server, {
   cors: {
     origin: '*', // o tu dominio del frontend
-    methods: ['GET', 'POST', 'PUT']
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
   }
 });
 
@@ -72,8 +72,8 @@ db.sequelize.authenticate()
 
     // Y arrancamos el servidor
     server.listen(port, () => {
-      console.log(`Servidor corriendo en http://localhost:${port}`);
-      console.log(`Servidor corriendo en https://backendabogados-hsnm.onrender.com`);
+      // console.log(`Servidor corriendo en http://localhost:${port}`);
+      console.log(`Servidor corriendo en https://backendabogados-w78u.onrender.com`);
       
     });
   })

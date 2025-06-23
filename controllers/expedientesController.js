@@ -16,7 +16,8 @@ exports.getExpedientes = async (req, res) => {
     const expedientes = await Expedientes.findAll({
       where: {
         idTipo,
-        idUsuario: req.user.idUsuario
+        idUsuario: req.user.idUsuario,
+        eliminado: 0,
       }
     });
     res.json(expedientes);
@@ -28,7 +29,7 @@ exports.getExpedientes = async (req, res) => {
 exports.getAllExpedientes = async (req, res) => {
   try {
     // Esta función no filtra por usuario, se usa solo si el usuario tiene permisos especiales
-    const expedientes = await Expedientes.findAll();
+    const expedientes = await Expedientes.findAll({ where: { eliminado: 0 }});
     res.json(expedientes);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -52,7 +53,8 @@ exports.getExpedienteByTipoYId = async (req, res) => {
       where: {
         idExpediente: id,
         idTipo,
-        idUsuario
+        idUsuario,
+        eliminado: 0
       }
     });
 
@@ -85,6 +87,7 @@ exports.getExpedientesDelUsuario = async (req, res) => {
       where: {
         idUsuario,
         idTipo: tipoExpediente.idTipo,
+        eliminado: 0
       }
     });
 
@@ -129,7 +132,8 @@ exports.updateExpediente = async (req, res) => {
     const expediente = await Expedientes.findOne({
       where: {
         idExpediente: id,
-        idUsuario: req.user.idUsuario
+        idUsuario: req.user.idUsuario,
+        eliminado: 0
       }
     });
 
@@ -157,25 +161,28 @@ exports.updateExpediente = async (req, res) => {
   }
 };
 
+
 exports.deleteExpediente = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    // Igual, eliminar solo si es del usuario autenticado
     const expediente = await Expedientes.findOne({
       where: {
         idExpediente: id,
-        idUsuario: req.user.idUsuario
-      }
+        idUsuario: req.user.idUsuario, // Solo si pertenece al usuario logueado
+      },
     });
 
-    if (!expediente) return res.status(404).json({ error: 'Expediente no encontrado o no autorizado' });
+    if (!expediente) return res.status(404).json({ error: 'No encontrado o no autorizado' });
 
-    await expediente.destroy();
+    await expediente.destroy(); // 💥 Eliminación física
+
     res.json({ mensaje: 'Expediente eliminado correctamente' });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
+
+
 
 exports.updateAtrasados = async (req, res) => {
   try {
@@ -205,7 +212,8 @@ exports.updateAtrasados = async (req, res) => {
           where: {
             idTipo,
             fechaActualizacion: { [Op.lt]: sieteDiasAtras },
-            idEstado: 1
+            idEstado: 1,
+            eliminado: 0
           }
         }
       );
@@ -229,7 +237,8 @@ exports.finalizarExpediente = async (req, res) => {
     const expediente = await Expedientes.findOne({
       where: {
         idExpediente: id,
-        idUsuario: req.user.idUsuario
+        idUsuario: req.user.idUsuario,
+        eliminado: 0
       }
     });
 

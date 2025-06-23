@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     idTipo: { type: DataTypes.INTEGER, allowNull: false },
     fechaActualizacion: { type: DataTypes.DATE, allowNull: false },
     idUsuario: { type: DataTypes.INTEGER,  allowNull: false },
+    eliminado: { type: DataTypes.BOOLEAN,  allowNull: false },
   }, {
     tableName: 'Expedientes',
     timestamps: true,
