@@ -4,7 +4,7 @@ const { updateAtrasados } = require('./controllers/expedientesController');
 module.exports = (app) => {
   const tipos = ['federales', 'provinciales', 'extrajudiciales'];
 
-  cron.schedule('*/10 * * * * *', async () => {
+  cron.schedule('0 0 * * * *', async () => {
     console.log('🕛 Ejecutando cron para actualizar expedientes atrasados...');
     const io = app.get('socketio');
 

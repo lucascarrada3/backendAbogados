@@ -13,10 +13,10 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // Cargar modelos
-db.Estado = require('./Estado')(sequelize, DataTypes);
-db.TipoExpediente = require('./TipoExpediente')(sequelize, DataTypes);
-db.Expedientes = require('./Expedientes')(sequelize, DataTypes);
-db.Usuario = require('./Usuario')(sequelize, DataTypes);
+db.Estado = require('./Estado.js')(sequelize, DataTypes);
+db.TipoExpediente = require('./TipoExpediente.js')(sequelize, DataTypes);
+db.Expedientes = require('./Expedientes.js')(sequelize, DataTypes);
+db.Usuario = require('./Usuario.js')(sequelize, DataTypes);
 
 
 // Asociaciones (si existen)

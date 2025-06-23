@@ -186,13 +186,13 @@ exports.updateAtrasados = async (req, res) => {
     // Para prueba: 10 segundos atrás
     const sieteDiasAtras = new Date();
     sieteDiasAtras.setDate(sieteDiasAtras.getDate() - 7);
-     const limite = new Date(Date.now() - 10 * 1000);
+    //  const limite = new Date(Date.now() - 10 * 1000);
     console.log('Fecha límite para atraso:', sieteDiasAtras);
 
     const pendientes = await Expedientes.count({
       where: {
         idTipo,
-        fechaActualizacion: { [Op.lt]: limite },
+        fechaActualizacion: { [Op.lt]: sieteDiasAtras },
         idEstado: 1
       }
     });
@@ -204,7 +204,7 @@ exports.updateAtrasados = async (req, res) => {
         {
           where: {
             idTipo,
-            fechaActualizacion: { [Op.lt]: limite },
+            fechaActualizacion: { [Op.lt]: sieteDiasAtras },
             idEstado: 1
           }
         }
