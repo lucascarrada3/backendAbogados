@@ -196,7 +196,7 @@ exports.updateAtrasados = async (req, res) => {
       where: {
         idTipo,
         fechaActualizacion: { [Op.lt]: sieteDiasAtras },
-        idEstado: 1
+        idEstado: 2
       }
     });
     console.log(`Expedientes pendientes a actualizar: ${pendientes}`);
@@ -208,7 +208,7 @@ exports.updateAtrasados = async (req, res) => {
           where: {
             idTipo,
             fechaActualizacion: { [Op.lt]: sieteDiasAtras },
-            idEstado: 1,
+            idEstado: 2,
           }
         }
       );
