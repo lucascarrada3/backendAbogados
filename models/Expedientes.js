@@ -14,9 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     idUsuario: { type: DataTypes.INTEGER,  allowNull: false },
   }, {
     tableName: 'Expedientes',
-    timestamps: true,
+    timestamps: false,
     createdAt: false,
-    updatedAt: 'fechaActualizacion'
   });
 
   Expedientes.associate = (models) => {
@@ -26,9 +25,9 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // Hook para actualizar fechaActualizacion manualmente
-  Expedientes.beforeUpdate((expediente, options) => {
-    expediente.fechaActualizacion = new Date();
-  });
+  // Expedientes.beforeUpdate((expediente, options) => {
+  //   expediente.fechaActualizacion = new Date();
+  // });
 
   return Expedientes;
 };
