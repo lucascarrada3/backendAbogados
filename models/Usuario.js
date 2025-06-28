@@ -16,9 +16,12 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
         },
         password: DataTypes.STRING,
+        // googleTokens: {
+        //     type: DataTypes.TEXT,
+        //     allowNull: true
+        // }
     });
 
-    // Definir la asociación dentro de una función associate que recibe los modelos
     Usuario.associate = function(models) {
         Usuario.hasMany(models.Expedientes, {
             foreignKey: 'idUsuario',

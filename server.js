@@ -72,8 +72,8 @@ db.sequelize.authenticate()
 
     // Y arrancamos el servidor
     server.listen(port, () => {
-      // console.log(`Servidor corriendo en http://localhost:${port}`);
-      console.log(`Servidor corriendo en https://backendabogados-w78u.onrender.com`);
+      console.log(`Servidor corriendo en http://localhost:${port}`);
+      // console.log(`Servidor corriendo en https://backendabogados-w78u.onrender.com`);
       
     });
   })
@@ -81,5 +81,8 @@ db.sequelize.authenticate()
     console.error('Error al conectar con la base de datos:', err);
   });
 
+// en tu app.js o index.js de Express
+const googleCalendarRoutes = require('./routes/googleCalendarRoutes');
+app.use('/googleCalendar', googleCalendarRoutes);
 
 module.exports = app;
