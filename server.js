@@ -82,7 +82,7 @@ db.sequelize.authenticate()
   });
 
 // en tu app.js o index.js de Express
-const googleCalendarRoutes = require('./routes/googleCalendarRoutes');
-app.use('/googleCalendar', googleCalendarRoutes);
+// const googleCalendarRoutes = require('./routes/googleCalendarRoutes');
+// app.use('/googleCalendar', googleCalendarRoutes);
 
 module.exports = app;
