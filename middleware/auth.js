@@ -3,7 +3,7 @@ const SECRET_KEY = 'Prueba123.';
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log('Auth Header:', authHeader);  // <-- para debug
+  console.log('Auth Header:', authHeader);  
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Token no proporcionado o inválido' });
@@ -13,6 +13,7 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
+    console.log('Token decodificado:', decoded);
     req.user = decoded;
     next();
   } catch (err) {

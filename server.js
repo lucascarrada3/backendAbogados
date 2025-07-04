@@ -3,24 +3,23 @@ const cors = require('cors');
 const db = require('./models');
 const authRoutes = require('./routes/auth');
 const expedientesRoutes = require('./routes/expedientes');
+const eventosRoutes = require('./routes/eventos');
 const authMiddleware = require('./middleware/auth');
 
 const http = require('http');
 const { Server } = require('socket.io');
 
-const app = express(); // ← MOVER ESTA LÍNEA AQUÍ
-const port = process.env.PORT || 3001
+const app = express();
+const port = process.env.PORT || 3001;
 
-const server = http.createServer(app); // ← YA puedes usar `app` aquí
+const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: '*', // o tu dominio del frontend
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   }
 });
-
-// const PORT = 3001;
 
 app.set('socketio', io);
 
@@ -31,34 +30,30 @@ app.use(express.json());
 // Rutas públicas
 app.use('/auth', authRoutes);
 
-// Middleware de autenticación para TODO lo que no sea /auth
+// Middleware autenticación
 app.use(authMiddleware);
 
 // Rutas protegidas
 app.use('/expedientes', expedientesRoutes);
+app.use('/eventos', eventosRoutes);
 
-// Otras rutas protegidas
+// Otros endpoints
 app.get('/estado/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const estado = await db.Estado.findByPk(id);
-        if (!estado) return res.status(404).json({ error: 'Estado no encontrado' });
-        res.json(estado);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+  try {
+    const { id } = req.params;
+    const estado = await db.Estado.findByPk(id);
+    if (!estado) return res.status(404).json({ error: 'Estado no encontrado' });
+    res.json(estado);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
-
 app.get('/estado', async (req, res) => {
-    const estados = await db.Estado.findAll();
-    res.json(estados);
+  const estados = await db.Estado.findAll();
+  res.json(estados);
 });
 
-// Cronjob para actualizar atrasados
-require('./atrasadosCron');
-
-// Conexión y sync con base de datos
-// Conexión y sync con base de datos
+// Conexión y sync DB
 db.sequelize.authenticate()
   .then(() => {
     console.log('Conexión a la base de datos establecida correctamente.');
@@ -67,22 +62,17 @@ db.sequelize.authenticate()
   .then(() => {
     console.log('Modelos sincronizados.');
 
-    // ✅ SOLO AHORA cargamos el cronjob, cuando `app` ya existe
+    // Cargamos los cron jobs solo acá, cuando app e io ya existen
     require('./atrasadosCron')(app);
+    require('./notificadorEventos')();
 
-    // Y arrancamos el servidor
     server.listen(port, () => {
       // console.log(`Servidor corriendo en http://localhost:${port}`);
       console.log(`Servidor corriendo en https://backendabogados-w78u.onrender.com`);
-      
     });
   })
   .catch(err => {
     console.error('Error al conectar con la base de datos:', err);
   });
-
-// en tu app.js o index.js de Express
-// const googleCalendarRoutes = require('./routes/googleCalendarRoutes');
-// app.use('/googleCalendar', googleCalendarRoutes);
 
 module.exports = app;
