@@ -2,30 +2,36 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../models');
-const Usuario = db.Usuario;
+const { Usuario } = require('../models');
+// const Usuario = db.Usuario;
 
 const SECRET_KEY = 'Prueba123.';
 
 exports.register = async (req, res) => {
   try {
     const { nombreCompleto, nombreUsuario, email, password } = req.body;
-
-    const usuarioExistente = await Usuario.findOne({ where: { nombreUsuario } });
-    if (usuarioExistente) return res.status(400).json({ error: 'El usuario ya existe' });
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const nuevoUsuario = await Usuario.create({
+    await Usuario.create({
       nombreCompleto,
       nombreUsuario,
       email,
       password: hashedPassword
     });
 
-    res.status(201).json({ message: 'Usuario creado correctamente' });
+    return res.status(201).json({ message: 'Usuario creado correctamente' });
   } catch (error) {
-    console.error('Error en register:', error);  
-    res.status(500).json({ error: 'Error en el registro' });
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const field = error.errors[0].path;
+      if (field === 'email') {
+        return res.status(400).json({ error: 'El correo electrónico ya está en uso' });
+      } else if (field === 'nombreUsuario') {
+        return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
+      }
+    }
+
+    console.error('Error en register:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
