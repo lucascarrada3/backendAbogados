@@ -1,4 +1,3 @@
-// models/Usuario.js
 module.exports = (sequelize, DataTypes) => {
   const Usuario = sequelize.define('Usuario', {
     idUsuario: {
@@ -17,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     password: DataTypes.STRING,
+    fotoPerfil: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    }
   }, {
     tableName: 'Usuarios',
     timestamps: true,
@@ -24,11 +27,10 @@ module.exports = (sequelize, DataTypes) => {
 
   Usuario.associate = function(models) {
     Usuario.hasMany(models.Evento, {
-      foreignKey: 'idUsuario',  // coincidente con Evento
+      foreignKey: 'idUsuario',
       as: 'eventos'
     });
 
-    // Si usas Expedientes, asociá acá también
     Usuario.hasMany(models.Expedientes, {
       foreignKey: 'idUsuario',
       as: 'expedientes'

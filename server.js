@@ -5,6 +5,9 @@ const authRoutes = require('./routes/auth');
 const expedientesRoutes = require('./routes/expedientes');
 const eventosRoutes = require('./routes/eventos');
 const authMiddleware = require('./middleware/auth');
+const usuariosRoutes = require('./routes/usuarios');
+const path = require('path');
+
 
 const http = require('http');
 const { Server } = require('socket.io');
@@ -33,9 +36,13 @@ app.use('/auth', authRoutes);
 // Middleware autenticación
 app.use(authMiddleware);
 
+//imagenes
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Rutas protegidas
 app.use('/expedientes', expedientesRoutes);
 app.use('/eventos', eventosRoutes);
+app.use('/usuarios', usuariosRoutes);
 
 // Otros endpoints
 app.get('/estado/:id', async (req, res) => {
