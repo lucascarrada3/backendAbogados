@@ -31,6 +31,7 @@ db.TipoExpediente = require('./TipoExpediente.js')(sequelize, DataTypes);
 db.Expedientes = require('./Expedientes.js')(sequelize, DataTypes);
 db.Usuario = require('./Usuario.js')(sequelize, DataTypes);
 db.Evento = require('./Evento.js')(sequelize, DataTypes);
+db.RecuperacionPassword = require('./RecuperacionPassword.js')(sequelize, DataTypes);
 
 
 // Asociaciones (si existen)
